@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/vis-network.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background: #1e1e1e;
+            color: white;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #2c3e50;
+            padding: 15px;
+            height: 100vh;
+            color: white;
+        }
+
+        .clients-panel {
+            width: 250px;
+            background: #eee;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        body.dark-mode .clients-panel {
+            background: #2c2c2c;
+        }
+
+        .clients-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .clients-list ul li {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .device-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .device-table th, .device-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .device-table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Dark Mode Table */
+        body.dark-mode .device-table th {
+            background: #333;
+        }
+
+        /* Modal Popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+        }
+
+        body.dark-mode .modal {
+            background: #2c2c2c;
+            color: white;
+        }
+
+        .modal h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .modal-buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-buttons button {
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .connect-btn { background: #28a745; color: white; }
+        .edit-btn { background: #ffc107; color: black; }
+        .delete-btn { background: #dc3545; color: white; }
+        .close-btn { background: #6c757d; color: white; }
+		
+		#network-container {
+			position: relative;
+			width: 400px;  /* Default size */
+			height: 300px;
+			background-color: #222;
+			border-radius: 10px; /* Rounded corners */
+			overflow: hidden;
+			color: white;
+		}
+
+		#fullscreen-btn {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			background: rgba(255, 255, 255, 0.2);
+			border: none;
+			color: white;
+			font-size: 20px;
+			padding: 5px 10px;
+			cursor: pointer;
+			border-radius: 5px;
+		}
+
+		#network-text {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-size: 20px;
+			font-weight: bold;
+		}
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+    <h2 class="brand">
+        <span class="axiom">Infra</span><span class="ex">AiOps</span>
+    </h2>
+    <ul>
+        <li><i class="fas fa-rocket"></i> Get Started</li>
+        <li><i class="fas fa-tachometer-alt"></i> <a href="dashboard.html" style="text-decoration: none; color: inherit;">Dashboard</a></li>
+        <li><i class="fas fa-server"></i> Devices</li>
+        <li><i class="fas fa-plug"></i> Quick Connect</li>
+        <li><i class="fas fa-chart-line"></i> Reporting</li>
+        <li><i class="fas fa-ticket-alt"></i> Ticketing</li>
+        <li><i class="fas fa-cogs"></i> Administration</li>
+        <li><i class="fas fa-star"></i> Favourites</li>
+        <li><i class="fas fa-history"></i> Recents</li>
+        <li><i class="fas fa-robot"></i> Automation</li>
+        <li><i class="fas fa-question-circle"></i> Help</li>
+    </ul>
+
+    <!-- Filters Section -->
+    <h2>Filters</h2>
+    <div class="filter">
+        <label><input type="checkbox"> Saved Filters: Demo</label>
+    </div>
+    
+    <!-- Management Section -->
+    <h2>Management</h2>
+    <div class="management">
+        <label><input type="checkbox"> System Updates</label><br>
+        <label><input type="checkbox"> Security Updates</label><br>
+        <label><input type="checkbox"> Application Updates</label><br>
+        <label><input type="checkbox"> Compliance Check</label>
+    </div>
+</div>
+
+
+
+
+    
+<div id="network-container"">
+
+<p id="network-text">Network Utilization: 50%</p>
+<button id="fullscreen-btn">⛶</button>
+
+</div>
+
+    <script>
+    window.onload = function () {
+    var nodes = new vis.DataSet([
+        { id: 1, label: "Sterling", shape: "image", image: "data-center-icon.png", size: 30, imagePadding: { left: 5, right: 5, top: 5, bottom: 5 }, x: 300, y: 100 },
+        
+		{ id: 2, label: "OS Layer", shape: "circularImage", image: "server-icon.png", size: 30, imagePadding: { left: 5, right: 5, top: 5, bottom: 5 }, x: 100, y: 100  },
+		{ id: 3, label: "Application Layer", shape: "image", image: "application.png", size: 30, imagePadding: { left: 5, right: 5, top: 5, bottom: 5 }, x: 150, y: -50 },
+        { id: 4, label: "Database Layer", shape: "image", image: "database.png", size: 20, imagePadding: { left: 5, right: 5, top: 5, bottom: 5 }, x: 150, y: 250 },
+		
+		{ id: 6, label: "% CPU Utilization", shape: "circularImage", image: "chart1.png", size: 20, color: "red",  x: -350, y: 0  },
+		{ id: 7, label: "% File System Utilization", shape: "circularImage", color: "orange", image: "chart1.png", size: 20, x: -350, y: 100 },
+        { id: 8, label: "% Memory Utilization", size: 20, color: "green", shape: "circularImage", image: "chart1.png", x: -350, y: 200 },
+		
+        { id: 9, label: "SQL Log Space Used %", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -300, y: 300 },
+        { id: 10, label: "Expensive SQL Query", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -250, y: 400 },
+		
+		{ id: 11, label: "Background Work", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -300, y: -100 },
+		{ id: 12, label: "Processes Used %", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -250, y: -200 },
+		{ id: 13, label: "Diag Work Processes Used %", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -200, y: -300 },
+		{ id: 14, label: "Instance Status", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -150, y: -400 },
+		{ id: 15, label: "Update Status", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -100, y: -500 },
+		{ id: 16, label: "Short Dumps", size: 20, color: "orange", shape: "circularImage", image: "chart1.png", x: -50, y: -600 },
+		
+		
+		
+		
+    ]);
+
+    var edges = new vis.DataSet([
+        { from: 1, to: 2 },
+        { from: 1, to: 3 },
+        { from: 1, to: 4 },
+        { from: 2, to: 6 },
+        { from: 2, to: 7 },
+        { from: 2, to: 8 },
+		{ from: 3, to: 6 },
+        { from: 3, to: 7 },
+        { from: 3, to: 8 },
+		{ from: 4, to: 6 },
+        { from: 4, to: 7 },
+        { from: 4, to: 8 },
+        { from: 4, to: 9 },
+        { from: 4, to: 10 },
+		{ from: 3, to: 11 },
+		{ from: 3, to: 12 },
+		{ from: 3, to: 13 },
+		{ from: 3, to: 14 },
+		{ from: 3, to: 15 },
+		{ from: 3, to: 16 },
+		{ from: 2, to: 11 },
+		{ from: 2, to: 12 },
+		{ from: 2, to: 13 },
+		{ from: 2, to: 14 },
+		{ from: 2, to: 15 },
+		{ from: 2, to: 16 },
+		
+        
+    ]);
+
+    var container = document.getElementById("network-container");
+    var data = { nodes: nodes, edges: edges };
+    var options = {
+        nodes: { font: { color: "white" } },
+        edges: { color: "gray" },
+        physics: { enabled: false }, // Keep positions fixed
+        layout: { randomSeed: 42 }
+    };
+
+    new vis.Network(container, data, options);
+};
+document.getElementById("fullscreen-btn").addEventListener("click", function () {
+    var container = document.getElementById("network-container");
+    if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(err => {
+            console.log(`Error attempting fullscreen: ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+});
+setTimeout(() => {
+    var textDiv = document.createElement("div");
+	var buttonDiv = document.createElement("div");
+    textDiv.innerText = "Sterling";
+    textDiv.id = "network-text";
+	buttonDiv.id = "fullscreen-btn"
+    document.getElementById("network-container").appendChild(textDiv);
+	document.getElementById("network-container").appendChild(buttonDiv);
+}, 500); // Small delay ensures it renders after Vis.js
+</script>
+
+</script>
+</body>
+</html>

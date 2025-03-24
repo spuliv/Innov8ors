@@ -1,0 +1,26 @@
+[
+    {
+        "id": "device1",
+        "name": "JBL - DC01",
+        "os": "Microsoft Windows Server 2012 R2 Standard x64",
+        "alerts": 0,
+        "hardware": {
+            "cpu": "Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz",
+            "memory": "4096 MB",
+            "gpu": "Microsoft Basic Display Adapter"
+        },
+        "services": 4,
+        "network": {
+            "ip": "10.10.2.127",
+            "mac": "0E-45-9C-72-E6-BF"
+        },
+        "monitors": {
+            "success": "93%",
+            "failed": 7
+        },
+        "storage": {
+            "used": "98%",
+            "total": "29.7 GB"
+        }
+    }
+]
